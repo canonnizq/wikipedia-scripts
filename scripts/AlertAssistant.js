@@ -32,7 +32,7 @@ $(function () {
 		};
 	}
 
-	if (mw.config.get('wgNamespaceNumber') === 3 | mw.config.get('wgPageName') === 'User:CanonNi/sandbox2') {
+	if (mw.config.get('wgNamespaceNumber') === 3) {
 		mw.util.addPortletLink(
 			'p-cactions', //target tab - personal links
 			'#', //link URL
