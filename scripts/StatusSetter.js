@@ -1,102 +1,56 @@
-$(function () {
-	//Check if the config is defined
-	if (typeof (alertAssistantConfig) == 'undefined') {
-		alertAssistantConfig = {};
+$.when(
+	$.ready,
+	mw.loader.using('mediawiki.api')
+).then(function () {
+
+	// check for config options, and set them to default values if undefined
+	if (typeof (statusSetterConfig) == 'undefined') { // create variable to store configuration
+		statusSetterConfig = {};
 	}
 
-	if (typeof (alertAssistantConfig.topicList) == 'undefined') {
-		alertAssistantConfig.topicList = {
-			'a-a': ['Armenia, Azerbaijan, or related conflicts'],
-			'a-i': ['the Arab–Israeli conflict'],
-			'ab': ['abortion'],
-			'acu': ['complementary and alternative medicine'],
-			'ap': ['post-1992 politics of the United States and closely related people'],
-			'at': ['the English Wikipedia article titles policy and Manual of Style'],
-			'b': ['the Balkans or Eastern Europe '],
-			'blp': ['articles about living or recently deceased people, and edits relating to the subject (living or recently deceased) of such biographical articles'],
-			'cc': ['climate change'],
-			'cid': [' discussions about infoboxes and to edits adding, deleting, collapsing, or removing verifiable information from infoboxes'],
-			'covid': ['COVID-19, broadly construed'],
-			'fg': ['Falun Gong'],
-			'gc': ['governmental regulation of firearm ownership; the social, historical and political context of such regulation; and the people and organizations associated with these issues'],
-			'gg': ['gender-related disputes or controversies or people associated with them'],
-			'gmo': ['genetically modified organisms, commercially produced agricultural chemicals and the companies that produce them, broadly construed'],
-			'horn': ['the Horn of Africa (defined as including Ethiopia, Somalia, Eritrea, Djibouti, and adjoining areas if involved in related disputes)'],
-			'ipa': ['India, Pakistan, and Afghanistan'],
-			'irp': ['post-1978 Iranian politics'],
-			'kurd': ['the topics of Kurds and Kurdistan, broadly construed'],
-			'ps': ['pseudoscience and fringe science'],
-			'r-i': ['the intersection of race/ethnicity and human abilities and behaviour'],
-			'sl': ['Sri Lanka'],
-			'tt': ['The Troubles']
+	if (typeof (statusSetterConfig.statusList) == 'undefined') { // all available statuses
+		statusSetterConfig.statusList = ['somewhere', 'in', 'editing', 'online', 'offline', 'busy', 'sleeping', 'wikibreak', 'away', 'vandal', 'holiday', 'school', 'working', 'eating', 'huggle', 'twinkle']; // copied from [[Template:UserStatus]]
+	}
+
+	if (typeof (statusSetterConfig.statusPage) == 'undefined') {
+		statusSetterConfig.statusPage = 'User:' + mw.config.get('wgUserName') + '/Status';
+	}
+
+	//make the edit
+	function makeListener(newStatus) {
+		return function (evt) {
+			evt.preventDefault();
+			var api = new mw.Api({
+				ajax: { headers: { 'Api-User-Agent': '[[User:CanonNi/Scripts/StatusSetter.js]]' } }
+			});
+
+			api.postWithEditToken({
+				action: 'edit',
+				title: statusSetterConfig.statusPage,
+				text: newStatus,
+				summary: 'Set status to ' + newStatus + ' using [[User:CanonNi/Scripts/StatusSetter|StatusSetter]]'
+			}).then(function () {
+				api.post({ action: 'purge', titles: 'User:' + mw.config.get('wgUserName') });
+				mw.notify('Done setting status!');
+			});
+			return false;
 		};
 	}
 
-	if (mw.config.get('wgNamespaceNumber') === 3) {
-		mw.util.addPortletLink(
-			'p-cactions', //target tab - personal links
-			'#', //link URL
-			'CT Alert', //link text
-			'pt-alert', //id of new button
-			'Alert about contentious topics', //hover text
-		);
-	}
+	// add the links, but only if on own user/talk page
+	if (mw.config.get('wgTitle') === mw.config.get('wgUserName') | mw.config.get('wgPageName') === 'User:CanonNi/Scripts/StatusSetter') {
+		mw.util.addPortlet('p-status', 'Status', '#p-cactions');
+		for (var i = 0; i < statusSetterConfig.statusList.length; i++) {
+			var stat = statusSetterConfig.statusList[i];
 
-	$('#pt-alert').click(function () {
-		var Window = new Morebits.simpleWindow(600, 500);
-		Window.setTitle('Alert about contentious topics');
-		Window.setScriptName('AlertAssistant');
-		Window.display();
-		var form = new Morebits.quickForm(publish);
-		form.append({
-			type: 'radio',
-			name: 'first',
-			list: [
-				{ label: 'First', value: 'true' },
-				{ label: 'Regular', value: 'false' }
-			]
-		});
-		var categories = form.append({
-			type: 'select',
-			name: 'topic',
-			label: 'Select topic:'
-		});
-		for (var key in alertAssistantConfig.topicList) {
-			if (alertAssistantConfig.topicList.hasOwnProperty(key)) {
-				categories.append({
-					type: 'option',
-					label: alertAssistantConfig.topicList[key][0],
-					value: key
-				});
-			}
-		}
-		form.append({ type: 'submit' });
-		var result = form.render();
-		Window.setContent(result);
-		Window.display();
-
-		function publish(e) {
-			var form = e.target;
-			var topic = form.topic.value;
-			var first = form.first.value === 'true';
-
-			Morebits.simpleWindow.setButtonsEnabled(false);
-			Morebits.status.init(form);
-			Morebits.wiki.actionCompleted.notice = 'Alerted!';
-
-			var alertPage = new Morebits.wiki.page(mw.config.get('wgPageName'), 'Processing');
-			alertPage.setFollowRedirect(true);
-			alertPage.load(function () {
-				var text = alertPage.getPageText();
-				if (first) {
-					text += '\n\n' + '{{subst:alert/first|' + topic + '}} ~~~~';
-				} else {
-					text += '\n\n' + '== Contentious topic alert == \n' + '{{subst:alert|' + topic + '}} ~~~~';
-				}
-				alertPage.setEditSummary('Contentious topic alert: ' + topic + ' (using [[User:CanonNi/Scripts/AlertAssistant|AlertAssistant]])');
-				alertPage.setPageText(text);
-				alertPage.save();
-			});
-		}
-	});
+			mw.util.addPortletLink(
+				'p-status',
+				'#',
+				stat.charAt(0).toUpperCase() + stat.slice(1), // link text, capitalized
+				'pt-status-' + stat, // id of new button
+				'Set status to ' + stat, // hover text
+			)
+				.addEventListener('click', makeListener(stat));
+		};
+	};
 });
