@@ -1,6 +1,7 @@
-[![CC-BY-SA](https://forthebadge.com/images/badges/cc-by-sa.svg)](https://creativecommons.org/licenses/by-sa/4.0/) ![Made with JavaScript](https://forthebadge.com/images/badges/made-with-javascript.svg) ![0% Optimized](https://forthebadge.com/images/badges/0-percent-optimized.svg)
-
 # CanonNi's user scripts
+
+![GitHub License](https://img.shields.io/github/license/canonnizq/wikipedia-scripts) ![GitHub top language](https://img.shields.io/github/languages/top/canonnizq/wikipedia-scripts) ![GitHub last commit](https://img.shields.io/github/last-commit/canonnizq/wikipedia-scripts)
+
 This is a collection of [user scripts](https://en.wikipedia.org/wiki/Wikipedia:User_scripts) for use on the English Wikipedia, programmed using JavaScript.
 
 - **AlertAssistant**
