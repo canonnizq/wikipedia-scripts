@@ -3,7 +3,7 @@
 
 $(() => {
     const topicList = {
-        aa: 'Armenia, Azerbaijan, or related conflicts',
+        'a-a': 'Armenia, Azerbaijan, or related conflicts',
         'a-i': 'the Arab–Israeli conflict',
         ab: 'abortion',
         acu: 'complementary and alternative medicine',
@@ -155,7 +155,7 @@ $(() => {
                             sendAlert(username, selectorMenu, selectedTopic)
                                 .then(() => {
                                     console.log('successfully sent alert');
-                                    this.close();
+                                    location.reload();
                                 })
                                 .catch((err) => {
                                     console.error('error sending alert: ', err);
