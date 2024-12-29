@@ -105,7 +105,6 @@ $(() => {
             });
 
             this.selectorButtons = new OO.ui.ButtonSelectWidget({
-                value: 'intro',
                 items: [
                     new OO.ui.ButtonOptionWidget({
                         data: 'intro',
@@ -151,17 +150,21 @@ $(() => {
                     .getData();
 
                 return new OO.ui.Process(() => {
-                    sendAlert(username, selectorMenu, selectedTopic)
-                        .then(() => {
-                            console.log('successfully sent alert');
-                            this.close();
-                        })
-                        .catch((err) => {
-                            console.error('error sending alert: ', err);
-                            OO.ui.alert(
-                                'Failed to send alert! Check console for errors and retry.'
-                            );
-                        });
+                    sendAlert(username, selectorMenu, selectedTopic).then(
+                        () => {
+                            sendAlert(username, selectorMenu, selectedTopic)
+                                .then(() => {
+                                    console.log('successfully sent alert');
+                                    this.close();
+                                })
+                                .catch((err) => {
+                                    console.error('error sending alert: ', err);
+                                    OO.ui.alert(
+                                        'Failed to send alert! Check console for errors and retry.'
+                                    );
+                                });
+                        }
+                    );
                 });
             }
 
