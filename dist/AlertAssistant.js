@@ -100,7 +100,6 @@ $(function () {
           }
         });
         this.selectorButtons = new OO.ui.ButtonSelectWidget({
-          value: 'intro',
           items: [new OO.ui.ButtonOptionWidget({
             data: 'intro',
             icon: 'lightbulb',
@@ -138,11 +137,13 @@ $(function () {
           var selectorMenu = this.selectorButtons.findSelectedItem().getData();
           return new OO.ui.Process(function () {
             sendAlert(username, selectorMenu, selectedTopic).then(function () {
-              console.log('successfully sent alert');
-              _this.close();
-            })["catch"](function (err) {
-              console.error('error sending alert: ', err);
-              OO.ui.alert('Failed to send alert! Check console for errors and retry.');
+              sendAlert(username, selectorMenu, selectedTopic).then(function () {
+                console.log('successfully sent alert');
+                _this.close();
+              })["catch"](function (err) {
+                console.error('error sending alert: ', err);
+                OO.ui.alert('Failed to send alert! Check console for errors and retry.');
+              });
             });
           });
         }
