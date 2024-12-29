@@ -27,6 +27,7 @@ $(() => {
         rne: 'the results of any national or sub-national election',
         sl: 'Sri Lanka',
         tt: 'The Troubles',
+        ya: 'Yasuke',
     };
 
     function sendAlert(user, template, topic) {
@@ -41,6 +42,10 @@ $(() => {
             case 'alert':
                 newWikitext = `\n\n==Contentious topic alert==\n{{subst:alert|${topic}}} ~~~~`;
                 editSummary = `[[WP:CT|Contentious topic]] alert: ${topic}) ([[User:CanonNi/Scripts/AlertAssistant|AA]]`;
+                break;
+            default:
+                newWikitext = `{{error|AlertAssistant error! Please revert edit and report bug.}}`;
+                editSummary = `AlertAssistant error! Please revert edit and report bug.`;
                 break;
         }
 
@@ -141,8 +146,9 @@ $(() => {
                     .getMenu()
                     .findSelectedItem()
                     .getData();
-                const selectorMenu =
-                    this.selectorButtons.findSelectedItem().getData;
+                const selectorMenu = this.selectorButtons
+                    .findSelectedItem()
+                    .getData();
 
                 return new OO.ui.Process(() => {
                     sendAlert(username, selectorMenu, selectedTopic)
