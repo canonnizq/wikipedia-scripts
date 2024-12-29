@@ -44,7 +44,8 @@ $(function () {
     'r-i': 'the intersection of race/ethnicity and human abilities and behaviour',
     rne: 'the results of any national or sub-national election',
     sl: 'Sri Lanka',
-    tt: 'The Troubles'
+    tt: 'The Troubles',
+    ya: 'Yasuke'
   };
   function sendAlert(user, template, topic) {
     var newWikitext;
@@ -57,6 +58,10 @@ $(function () {
       case 'alert':
         newWikitext = "\n\n==Contentious topic alert==\n{{subst:alert|".concat(topic, "}} ~~~~");
         editSummary = "[[WP:CT|Contentious topic]] alert: ".concat(topic, ") ([[User:CanonNi/Scripts/AlertAssistant|AA]]");
+        break;
+      default:
+        newWikitext = "{{error|AlertAssistant error! Please revert edit and report bug.}}";
+        editSummary = "AlertAssistant error! Please revert edit and report bug.";
         break;
     }
     return new mw.Api().edit("User talk:".concat(user), function (revision) {
@@ -130,7 +135,7 @@ $(function () {
         if (action === 'send') {
           var username = mw.config.get('wgTitle');
           var selectedTopic = this.topicsDropdown.getMenu().findSelectedItem().getData();
-          var selectorMenu = this.selectorButtons.findSelectedItem().getData;
+          var selectorMenu = this.selectorButtons.findSelectedItem().getData();
           return new OO.ui.Process(function () {
             sendAlert(username, selectorMenu, selectedTopic).then(function () {
               console.log('successfully sent alert');
