@@ -21,7 +21,7 @@ function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf 
 
 $(function () {
   var topicList = {
-    aa: 'Armenia, Azerbaijan, or related conflicts',
+    'a-a': 'Armenia, Azerbaijan, or related conflicts',
     'a-i': 'the Arab–Israeli conflict',
     ab: 'abortion',
     acu: 'complementary and alternative medicine',
@@ -130,7 +130,6 @@ $(function () {
     }, {
       key: "getActionProcess",
       value: function getActionProcess(action) {
-        var _this = this;
         if (action === 'send') {
           var username = mw.config.get('wgTitle');
           var selectedTopic = this.topicsDropdown.getMenu().findSelectedItem().getData();
@@ -139,7 +138,7 @@ $(function () {
             sendAlert(username, selectorMenu, selectedTopic).then(function () {
               sendAlert(username, selectorMenu, selectedTopic).then(function () {
                 console.log('successfully sent alert');
-                _this.close();
+                location.reload();
               })["catch"](function (err) {
                 console.error('error sending alert: ', err);
                 OO.ui.alert('Failed to send alert! Check console for errors and retry.');
