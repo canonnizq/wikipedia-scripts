@@ -114,7 +114,7 @@ $(() => {
                     new OO.ui.ButtonOptionWidget({
                         data: 'alert',
                         icon: 'infoFilled',
-                        label: 'Regular',
+                        label: 'Alert',
                     }),
 
                     // will implement in the future
@@ -126,9 +126,16 @@ $(() => {
                 ],
             });
 
+            this.filterNotice = new OO.ui.MessageWidget({
+                type: 'notice',
+                icon: 'funnel',
+                label: new OO.ui.HtmlSnippet( '<strong>Note:</strong>Due to <a href="https://en.wikipedia.org/wiki/Special:AbuseFilter/602">filter 602</a>, the script will not close automatically.<br>Please reload the page after clicking send.' )
+            })
+
             this.fieldset.addItems([
                 new OO.ui.FieldLayout(this.topicsDropdown),
                 new OO.ui.FieldLayout(this.selectorButtons),
+                new OO.ui.FieldLayout(this.filterNotice),
             ]);
             this.panel.$element.append(this.fieldset.$element);
             this.$body.append(this.panel.$element);
