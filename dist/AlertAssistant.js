@@ -112,10 +112,10 @@ $(function () {
 
           // will implement in the future
           /* new OO.ui.ButtonOptionWidget({
-              data: 'sanction',
-              icon: 'error',
-              label: 'Sanctions',
-          }), */]
+                        data: 'sanction',
+                        icon: 'error',
+                        label: 'Sanctions',
+                    }), */]
         });
         this.filterNotice = new OO.ui.MessageWidget({
           type: 'notice',

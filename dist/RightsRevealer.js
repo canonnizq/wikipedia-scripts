@@ -9,92 +9,92 @@ $(function () {
     // Management
     bureaucrat: {
       list: [],
-      "class": "markrights-bureaucrat"
+      "class": 'markrights-bureaucrat'
     },
     checkuser: {
       list: [],
-      "class": "markrights-checkuser"
+      "class": 'markrights-checkuser'
     },
     suppress: {
       list: [],
-      "class": "markrights-suppress"
+      "class": 'markrights-suppress'
     },
     sysop: {
       list: [],
-      "class": "markrights-sysop"
+      "class": 'markrights-sysop'
     },
-    "interface-admin": {
+    'interface-admin': {
       list: [],
-      "class": "markrights-interface-admin"
+      "class": 'markrights-interface-admin'
     },
     templateeditor: {
       list: [],
-      "class": "markrights-templateeditor"
+      "class": 'markrights-templateeditor'
     },
     transwiki: {
       list: [],
-      "class": "markrights-transwiki"
+      "class": 'markrights-transwiki'
     },
-    "ipblock-exempt-grantor": {
+    'ipblock-exempt-grantor': {
       list: [],
-      "class": "markrights-ipblock-exempt-grantor"
+      "class": 'markrights-ipblock-exempt-grantor'
     },
     // Review
-    "abusefilter-helper": {
+    'abusefilter-helper': {
       list: [],
-      "class": "markrights-abusefilter-helper"
+      "class": 'markrights-abusefilter-helper'
     },
     patroller: {
       list: [],
-      "class": "markrights-patroller"
+      "class": 'markrights-patroller'
     },
     rollbacker: {
       list: [],
-      "class": "markrights-rollbacker"
+      "class": 'markrights-rollbacker'
     },
     autoreviewer: {
       list: [],
-      "class": "markrights-autoreviewer"
+      "class": 'markrights-autoreviewer'
     },
     // Mass-edits
     accountcreator: {
       list: [],
-      "class": "markrights-accountcreator"
+      "class": 'markrights-accountcreator'
     },
-    "massmessage-sender": {
+    'massmessage-sender': {
       list: [],
-      "class": "markrights-massmessage-sender"
+      "class": 'markrights-massmessage-sender'
     },
     // Confirmation
     confirmed: {
       list: [],
-      "class": "markrights-confirmed"
+      "class": 'markrights-confirmed'
     },
     autoconfirmed: {
       list: [],
-      "class": "markrights-autoconfirmed"
+      "class": 'markrights-autoconfirmed'
     },
     extendedconfirmed: {
       list: [],
-      "class": "markrights-extendedconfirmed"
+      "class": 'markrights-extendedconfirmed'
     },
     // Automated
     bot: {
       list: [],
-      "class": "markrights-bot"
+      "class": 'markrights-bot'
     },
     flood: {
       list: [],
-      "class": "markrights-flood"
+      "class": 'markrights-flood'
     },
     // IPBE
-    "ipblock-exempt": {
+    'ipblock-exempt': {
       list: [],
-      "class": "markrights-ipblock-exempt"
+      "class": 'markrights-ipblock-exempt'
     }
   };
   var markUG = function markUG() {
-    var $users = $("a.mw-userlink:not(.mw-anonuserlink)");
+    var $users = $('a.mw-userlink:not(.mw-anonuserlink)');
     var users = {};
     $users.each(function (index, link) {
       users[link.textContent] = true;
@@ -118,14 +118,14 @@ $(function () {
       n++;
     }
     var getUsername = function getUsername(url) {
-      var username = mw.util.getParamValue("title", url);
+      var username = mw.util.getParamValue('title', url);
       var decode1 = function decode1(username) {
         return decodeURIComponent(function (u) {
           try {
-            return decodeURIComponent(u.replace("User:", "").replace(/_/g, " "));
+            return decodeURIComponent(u.replace('User:', '').replace(/_/g, ' '));
           } catch (e) {
             console.log(e);
-            return u.replace("User:", "").replace(/_/g, " ").replace(/%(?!\d+)/g, "%25");
+            return u.replace('User:', '').replace(/_/g, ' ').replace(/%(?!\d+)/g, '%25');
           }
         }(username));
       };
@@ -136,10 +136,10 @@ $(function () {
       var decode2 = function decode2(username) {
         return decodeURIComponent(function (u) {
           try {
-            return decodeURIComponent(u.replace(/_/g, " "));
+            return decodeURIComponent(u.replace(/_/g, ' '));
           } catch (e) {
             console.log(e);
-            return u.replace(/_/g, " ").replace(/%(?!\d+)/g, "%25");
+            return u.replace(/_/g, ' ').replace(/%(?!\d+)/g, '%25');
           }
         }(username));
       };
@@ -150,8 +150,8 @@ $(function () {
     };
     var done = function done() {
       var group;
-      $("a.mw-userlink:not(.mw-anonuserlink)").each(function (i, el) {
-        var username = getUsername($(el).attr("href"));
+      $('a.mw-userlink:not(.mw-anonuserlink)').each(function (i, el) {
+        var username = getUsername($(el).attr('href'));
         if (username) {
           for (group in groups) {
             //if (groups.hasOwnProperty(group)) {
@@ -190,20 +190,20 @@ $(function () {
     var api = new mw.Api();
     for (var j = 0; j < queue2.length; j++) {
       api.get({
-        format: "json",
-        action: "query",
-        list: "users",
-        usprop: "groups",
-        ususers: queue2[j].join("|")
+        format: 'json',
+        action: 'query',
+        list: 'users',
+        usprop: 'groups',
+        ususers: queue2[j].join('|')
       }).done(process);
     }
   };
-  mw.hook("wikipage.content").add(function (e) {
-    if (e.attr("id") === "mw-content-text") {
+  mw.hook('wikipage.content').add(function (e) {
+    if (e.attr('id') === 'mw-content-text') {
       markUG();
       return;
     }
-    if (e.hasClass("mw-changeslist")) markUG();
+    if (e.hasClass('mw-changeslist')) markUG();
   });
 });
 
