@@ -26,10 +26,11 @@ jobs:
           npm run build
 
       - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/download-artifact@v4
         with:
-          name: build
           path: dist/
+          pattern: build-*
+          merge-multiple: true
       
       - name: Commit dist folder
         run: |
